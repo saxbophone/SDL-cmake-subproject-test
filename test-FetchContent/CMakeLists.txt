@@ -16,6 +16,10 @@ set(SDL_STATIC ON)
 
 FetchContent_MakeAvailable(SDL2)
 
-add_executable(test ${CMAKE_SOURCE_DIR}/../demo.cpp)
+add_executable(demo ${CMAKE_SOURCE_DIR}/../demo.cpp)
 
-target_link_libraries(test SDL2::SDL2-static)
+target_link_libraries(demo SDL2::SDL2-static)
+
+enable_testing()
+
+add_test(NAME verify-working COMMAND demo)
