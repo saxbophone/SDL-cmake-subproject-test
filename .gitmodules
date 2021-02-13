@@ -1,0 +1,4 @@
+[submodule "test-git-submodule/SDL"]
+	path = test-git-submodule/SDL
+	url = https://github.com/saxbophone/SDL.git
+	branch = saxbophone/cmake-no-install-when-subproject
