@@ -7,7 +7,7 @@ include(FetchContent)
 FetchContent_Declare(
     SDL2
     GIT_REPOSITORY https://github.com/saxbophone/SDL.git
-    GIT_TAG saxbophone/cmake-subproject-alias-targets
+    GIT_TAG main
 )
 
 set(SDL_TEST OFF)
