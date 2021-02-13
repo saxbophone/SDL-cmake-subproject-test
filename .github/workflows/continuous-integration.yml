@@ -23,12 +23,12 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Checkout submodules
-        if: ${{ matrix.method }} == 'find-package' || ${{ matrix.method }} == 'git-submodule'
+        if: ${{ matrix.method == 'find-package' || matrix.method == 'git-submodule' }}
         shell: bash
         run: git submodule update --init
 
       - name: Install SDL
-        if: ${{ matrix.method }} == 'find-package'
+        if: ${{ matrix.method == 'find-package' }}
         shell: bash
         run: |
           mkdir build-sdl
