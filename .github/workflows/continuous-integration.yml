@@ -1,0 +1,67 @@
+name: continuous-integration
+
+on: push
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    env:
+      BUILD_TYPE: Debug
+    strategy:
+      # fail-on-fast: fail the matrix build if any matrix jobs fail
+      fail-fast: true
+      # continue-on-error: keep running a specific job even if any of its steps fail
+      continue-on-error: true
+      matrix:
+        os: [macos-10.15, ubuntu-20.04]
+        cxx: [g++-10, clang++]
+        include:
+          - os: windows-2019
+            cxx: msvc
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Checkout submodules
+        uses: textbook/git-checkout-submodule-action@2.1.1
+
+      - name: Test CPMFindPackage()
+        env:
+          CXX: ${{ matrix.cxx }}
+        shell: bash
+        working-directory: ${{github.workspace}}/build-CPMFindPackage
+        run: |
+          cmake $GITHUB_WORKSPACE/test-CPMFindPackage
+          cmake --build . -j4
+          ctest --no-tests=error
+
+      - name: Test FetchContent()
+        env:
+          CXX: ${{ matrix.cxx }}
+        shell: bash
+        working-directory: ${{github.workspace}}/build-FetchContent
+        run: |
+          cmake $GITHUB_WORKSPACE/test-FetchContent
+          cmake --build . -j4
+          ctest --no-tests=error
+
+      - name: Test find_package()
+        env:
+          CXX: ${{ matrix.cxx }}
+        shell: bash
+        working-directory: ${{github.workspace}}/build-find-package
+        # TODO: install SDL2!
+        run: |
+          cmake $GITHUB_WORKSPACE/test-find-package
+          cmake --build . -j4
+          ctest --no-tests=error
+
+      - name: Test Git Submodule
+        env:
+          CXX: ${{ matrix.cxx }}
+        shell: bash
+        working-directory: ${{github.workspace}}/build-git-submodule
+        run: |
+          cmake $GITHUB_WORKSPACE/test-git-submodule
+          cmake --build . -j4
+          ctest --no-tests=error
