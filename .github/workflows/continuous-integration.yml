@@ -11,6 +11,7 @@ jobs:
       matrix:
         os: [macos-10.15, ubuntu-20.04]
         cxx: [g++-10, clang++]
+        method: [CPMFindPackage, FetchContent, find-package, git-submodule]
         include:
           - os: windows-2019
             cxx: msvc
@@ -19,50 +20,27 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Checkout submodules
+        if: ${{ matrix.method }} == 'find-package' || ${{ matrix.method }} == 'git-submodule'
         shell: bash
         run: git submodule update --init
 
-      - name: Test CPMFindPackage()
-        continue-on-error: true
-        env:
-          CXX: ${{ matrix.cxx }}
+      - name: Install SDL
+        if: ${{ matrix.method }} == 'find-package'
         shell: bash
-        working-directory: ${{github.workspace}}/build-CPMFindPackage
         run: |
-          cmake $GITHUB_WORKSPACE/test-CPMFindPackage
+          mkdir build-sdl
+          cd build-sdl
+          cmake $GITHUB_WORKSPACE/test-git-submodule/SDL
           cmake --build . -j4
-          ctest --no-tests=error
+          cmake --install .
 
-      - name: Test FetchContent()
-        continue-on-error: true
+      - name: Build
         env:
           CXX: ${{ matrix.cxx }}
+          METHOD: ${{ matrix.method }}
         shell: bash
-        working-directory: ${{github.workspace}}/build-FetchContent
+        working-directory: ${{github.workspace}}/build
         run: |
-          cmake $GITHUB_WORKSPACE/test-FetchContent
-          cmake --build . -j4
-          ctest --no-tests=error
-
-      - name: Test find_package()
-        continue-on-error: true
-        env:
-          CXX: ${{ matrix.cxx }}
-        shell: bash
-        working-directory: ${{github.workspace}}/build-find-package
-        # TODO: install SDL2!
-        run: |
-          cmake $GITHUB_WORKSPACE/test-find-package
-          cmake --build . -j4
-          ctest --no-tests=error
-
-      - name: Test Git Submodule
-        continue-on-error: true
-        env:
-          CXX: ${{ matrix.cxx }}
-        shell: bash
-        working-directory: ${{github.workspace}}/build-git-submodule
-        run: |
-          cmake $GITHUB_WORKSPACE/test-git-submodule
+          cmake $GITHUB_WORKSPACE/test-$METHOD
           cmake --build . -j4
           ctest --no-tests=error
