@@ -5,8 +5,6 @@ on: push
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    # continue-on-error: keep running a specific job even if any of its steps fail
-    continue-on-error: true
     strategy:
       # fail-on-fast: fail the matrix build if any matrix jobs fail
       fail-fast: true
@@ -25,6 +23,7 @@ jobs:
         run: git submodule update --init
 
       - name: Test CPMFindPackage()
+        continue-on-error: true
         env:
           CXX: ${{ matrix.cxx }}
         shell: bash
@@ -35,6 +34,7 @@ jobs:
           ctest --no-tests=error
 
       - name: Test FetchContent()
+        continue-on-error: true
         env:
           CXX: ${{ matrix.cxx }}
         shell: bash
@@ -45,6 +45,7 @@ jobs:
           ctest --no-tests=error
 
       - name: Test find_package()
+        continue-on-error: true
         env:
           CXX: ${{ matrix.cxx }}
         shell: bash
@@ -56,6 +57,7 @@ jobs:
           ctest --no-tests=error
 
       - name: Test Git Submodule
+        continue-on-error: true
         env:
           CXX: ${{ matrix.cxx }}
         shell: bash
