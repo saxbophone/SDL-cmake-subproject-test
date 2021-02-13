@@ -9,12 +9,15 @@ jobs:
       # fail-on-fast: fail the matrix build if any matrix jobs fail
       fail-fast: true
       matrix:
-        os: [macos-10.15, ubuntu-20.04]
+        os: [macos-10.15, ubuntu-20.04, windows-2019]
         cxx: [g++-10, clang++]
         method: [CPMFindPackage, FetchContent, find-package, git-submodule]
-        include:
+        exclude:
           - os: windows-2019
-            cxx: msvc
+            # doesn't actually matter which windows build we exclude since it
+            # pays no attention to either CXX option, but we don't want to run
+            # the same build twice so we still exclude one of them.
+            cxx: clang++
 
     steps:
       - uses: actions/checkout@v2
