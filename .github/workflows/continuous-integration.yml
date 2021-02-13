@@ -46,4 +46,4 @@ jobs:
         run: |
           cmake $GITHUB_WORKSPACE/test-$METHOD -DCMAKE_BUILD_TYPE=Debug
           cmake --build . -j4 --config Debug
-          ctest --no-tests=error --config Debug
+          ctest --no-tests=error -C Debug
