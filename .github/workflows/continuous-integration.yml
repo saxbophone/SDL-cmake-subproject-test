@@ -5,13 +5,11 @@ on: push
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    env:
-      BUILD_TYPE: Debug
+    # continue-on-error: keep running a specific job even if any of its steps fail
+    continue-on-error: true
     strategy:
       # fail-on-fast: fail the matrix build if any matrix jobs fail
       fail-fast: true
-      # continue-on-error: keep running a specific job even if any of its steps fail
-      continue-on-error: true
       matrix:
         os: [macos-10.15, ubuntu-20.04]
         cxx: [g++-10, clang++]
