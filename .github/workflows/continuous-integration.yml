@@ -35,7 +35,7 @@ jobs:
           cd build-sdl
           cmake $GITHUB_WORKSPACE/test-git-submodule/SDL -DCMAKE_BUILD_TYPE=Release
           cmake --build . -j4 --config Release
-          cmake --install . --config Release
+          sudo cmake --install . --config Release
 
       - name: Build
         env:
