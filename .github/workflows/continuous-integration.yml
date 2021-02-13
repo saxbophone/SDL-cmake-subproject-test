@@ -28,6 +28,8 @@ jobs:
         run: git submodule update --init
 
       - name: Install SDL
+        env:
+          OS: ${{ matrix.os }}
         if: ${{ matrix.method == 'find-package' }}
         shell: bash
         run: |
@@ -35,7 +37,7 @@ jobs:
           cd build-sdl
           cmake $GITHUB_WORKSPACE/test-git-submodule/SDL -DCMAKE_BUILD_TYPE=Release
           cmake --build . -j4 --config Release
-          sudo cmake --install . --config Release
+          if [ $OS != 'windows-2019' ]; then sudo cmake --install . --config Release; else cmake --install . --config Release; fi
 
       - name: Build
         env:
